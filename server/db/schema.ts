@@ -25,6 +25,9 @@ export const userProfiles = pgTable('user_profiles', {
   gender: text('gender'), // male / female / other
   heightCm: decimal('height_cm', { precision: 5, scale: 2 }),
   birthDate: date('birth_date'),
+  description: text('description'), // markdown
+  avatarUrl: text('avatar_url'),
+  role: text('role').default('user').$type<'admin' | 'teacher' | 'user'>(),
   latestRecord: jsonb('latest_record').default({}),
   preferences: jsonb('preferences').default({}),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),

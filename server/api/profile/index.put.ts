@@ -17,6 +17,7 @@ export default defineEventHandler(async (event) => {
       gender: body.gender,
       heightCm: body.heightCm,
       birthDate: body.birthDate,
+      description: body.description,
       preferences: body.preferences,
       updatedAt: new Date()
     })
