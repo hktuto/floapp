@@ -1,16 +1,32 @@
-// Public routes that don't require authentication
-const publicRoutes = ['/', '/login', '/register']
+// Routes that don't require authentication (for unauthenticated users)
+const publicOnlyRoutes = ['/login', '/register']
+
+// Routes that are always accessible
+const alwaysPublicRoutes = ['/']
 
 export default defineNuxtRouteMiddleware(async (to) => {
-  // Skip auth check for public routes
-  if (publicRoutes.includes(to.path)) {
+  const { checkAuth, isLoggedIn } = useAuth()
+  
+  // Check if user is logged in
+  const user = isLoggedIn.value ? await checkAuth() : await checkAuth()
+  
+  // If user is logged in and trying to access /login or /register
+  // redirect to dashboard
+  if (user && publicOnlyRoutes.includes(to.path)) {
+    return navigateTo('/dashboard')
+  }
+  
+  // Allow access to always public routes
+  if (alwaysPublicRoutes.includes(to.path)) {
     return
   }
-
-  // Check if user is logged in
-  const { checkAuth } = useAuth()
-  const user = await checkAuth()
-  // If not logged in, redirect to login
+  
+  // Allow access to public only routes (for unauthenticated users)
+  if (publicOnlyRoutes.includes(to.path)) {
+    return
+  }
+  
+  // For all other routes, require authentication
   if (!user) {
     return navigateTo('/login')
   }
