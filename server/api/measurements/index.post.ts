@@ -1,5 +1,6 @@
 import { db } from '@nuxthub/db'
 import { getUserSession } from '~/server/utils/session'
+import { uuidv7 } from 'uuidv7'
 
 export default defineEventHandler(async (event) => {
   const session = await getUserSession(event)
@@ -8,10 +9,9 @@ export default defineEventHandler(async (event) => {
   }
 
   const body = await readBody(event)
-  const recordId = generateUUIDv7()
+  const recordId = uuidv7()
 
   try {
-    // Access underlying PGlite client
     const client = (db as any).$client
     
     const result = await client.query(`
@@ -47,7 +47,3 @@ export default defineEventHandler(async (event) => {
     })
   }
 })
-
-function generateUUIDv7(): string {
-  return crypto.randomUUID()
-}

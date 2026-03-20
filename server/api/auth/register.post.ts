@@ -1,5 +1,6 @@
 import { db, schema } from '@nuxthub/db'
 import { eq } from 'drizzle-orm'
+import { uuidv7 } from 'uuidv7'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
@@ -31,10 +32,10 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // 生成 UUID v7
-  const accountId = generateUUIDv7()
+  // 使用 uuidv7 生成 ID
+  const accountId = uuidv7()
 
-  // Hash 密碼 (簡單版，實際應用應使用 bcrypt)
+  // Hash 密碼
   const passwordHash = await hashPassword(password)
 
   // 創建帳戶
@@ -57,7 +58,6 @@ export default defineEventHandler(async (event) => {
     latestRecord: {}
   })
 
-  // Return directly with the destructured account
   return {
     success: true,
     message: '註冊成功',
@@ -69,32 +69,7 @@ export default defineEventHandler(async (event) => {
   }
 })
 
-// UUID v7 生成函數
-function generateUUIDv7(): string {
-  const timestamp = Date.now()
-  const timestampHex = timestamp.toString(16).padStart(12, '0')
-  
-  const randomBytes = new Uint8Array(10)
-  crypto.getRandomValues(randomBytes)
-  
-  const bytes = Array.from(randomBytes)
-  
-  const uuid = [
-    timestampHex.slice(0, 8),
-    timestampHex.slice(8) + '7',
-    ((bytes[0]! & 0x0f) | 0x70).toString(16).padStart(2, '0') + 
-      bytes[1]!.toString(16).padStart(2, '0'),
-    ((bytes[2]! & 0x3f) | 0x80).toString(16).padStart(2, '0') + 
-      bytes[3]!.toString(16).padStart(2, '0'),
-    bytes.slice(4, 10)
-      .map(b => b.toString(16).padStart(2, '0'))
-      .join('')
-  ].join('-')
-  
-  return uuid
-}
-
-// 密碼 hash 函數 (簡單版，實際應用應使用 bcrypt)
+// 密碼 hash 函數
 async function hashPassword(password: string): Promise<string> {
   const encoder = new TextEncoder()
   const data = encoder.encode(password)
