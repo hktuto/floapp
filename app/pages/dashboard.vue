@@ -69,6 +69,24 @@ async function fetchDashboardData() {
   }
 }
 
+// Convert latestRecord values to numbers for previousRecord prop
+const previousRecord = computed(() => {
+  if (!latestRecord.value) return null
+  return {
+    weightKg: latestRecord.value.weightKg ? parseFloat(String(latestRecord.value.weightKg)) : null,
+    bodyFatPct: latestRecord.value.bodyFatPct ? parseFloat(String(latestRecord.value.bodyFatPct)) : null,
+    muscleKg: latestRecord.value.muscleKg ? parseFloat(String(latestRecord.value.muscleKg)) : null,
+    waterPct: latestRecord.value.waterPct ? parseFloat(String(latestRecord.value.waterPct)) : null,
+    boneKg: latestRecord.value.boneKg ? parseFloat(String(latestRecord.value.boneKg)) : null,
+    visceralFat: latestRecord.value.visceralFat ? parseInt(String(latestRecord.value.visceralFat)) : null,
+    chestCm: latestRecord.value.chestCm ? parseFloat(String(latestRecord.value.chestCm)) : null,
+    waistCm: latestRecord.value.waistCm ? parseFloat(String(latestRecord.value.waistCm)) : null,
+    hipsCm: latestRecord.value.hipsCm ? parseFloat(String(latestRecord.value.hipsCm)) : null,
+    thighCm: latestRecord.value.thighCm ? parseFloat(String(latestRecord.value.thighCm)) : null,
+    armCm: latestRecord.value.armCm ? parseFloat(String(latestRecord.value.armCm)) : null
+  }
+})
+
 function openDrawer() {
   // Reset form
   formData.value = {
@@ -191,7 +209,7 @@ function getTargetUnit(type: string): string {
               v-model:arm-cm="formData.armCm"
               v-model:note="formData.note"
               v-model:loading="saving"
-              :previous-record="latestRecord"
+              :previous-record="previousRecord"
               @submit="saveRecord"
             />
             
