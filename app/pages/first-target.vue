@@ -83,7 +83,7 @@ function skip() {
           <UFormField label="目標類型">
             <USelect
               v-model="target.targetType"
-              :options="[
+              :items="[
                 { label: '體重 (kg)', value: 'weight' },
                 { label: '體脂 (%)', value: 'body_fat' },
                 { label: '腰圍 (cm)', value: 'waist' },

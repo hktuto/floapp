@@ -87,7 +87,7 @@ async function saveProfile() {
         <UFormField label="性別">
           <USelect
             v-model="profile.gender"
-            :options="[
+            :items="[
               { label: '男', value: 'male' },
               { label: '女', value: 'female' },
               { label: '其他', value: 'other' }
