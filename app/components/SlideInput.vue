@@ -38,12 +38,6 @@ const startX = ref(0)
 const startValue = ref(0)
 
 function onTouchStart(e: TouchEvent | MouseEvent) {
-  // If no previous value, open modal immediately on click
-  if (props.previousValue === null && model.value === null) {
-    openModal()
-    return
-  }
-  
   isDragging.value = true
   
   const touchE = e as TouchEvent
@@ -53,7 +47,7 @@ function onTouchStart(e: TouchEvent | MouseEvent) {
     startX.value = (e as MouseEvent).clientX
   }
   
-  startValue.value = model.value ?? 0
+  startValue.value = model.value ?? props.previousValue ?? 0
   
   document.addEventListener('mousemove', onTouchMove)
   document.addEventListener('mouseup', onTouchEnd)
@@ -216,8 +210,7 @@ function confirmInput() {
     <!-- Hint text -->
     <div class="flex items-center justify-center gap-1 text-xs text-gray-400 mt-1">
       <UIcon name="i-lucide-move-horizontal" class="w-3 h-3" />
-      <span v-if="previousValue !== null">滑動調整 · 雙擊輸入</span>
-      <span v-else>點擊輸入數值</span>
+      <span>滑動調整 · 雙擊輸入</span>
     </div>
   </div>
 </template>
