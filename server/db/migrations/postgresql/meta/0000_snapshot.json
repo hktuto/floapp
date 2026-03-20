@@ -1,5 +1,5 @@
 {
-  "id": "9aff56ad-11d7-451d-befa-82c137bc1414",
+  "id": "03a0bc4f-8df7-465b-83ae-eef1e03d1f63",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -627,6 +627,25 @@
           "type": "date",
           "primaryKey": false,
           "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "avatar_url": {
+          "name": "avatar_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "role": {
+          "name": "role",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'user'"
         },
         "latest_record": {
           "name": "latest_record",

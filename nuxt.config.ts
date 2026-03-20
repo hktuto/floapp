@@ -5,7 +5,7 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@nuxthub/core'
   ],
-
+  ssr:false,
   hub: {
     db: 'postgresql',
     blob: true
