@@ -39,16 +39,16 @@ const startValue = ref(0)
 
 function onTouchStart(e: TouchEvent | MouseEvent) {
   isDragging.value = true
-  
+
   const touchE = e as TouchEvent
   if (touchE.touches && touchE.touches.length > 0 && touchE.touches[0]) {
     startX.value = touchE.touches[0].clientX
   } else {
     startX.value = (e as MouseEvent).clientX
   }
-  
+
   startValue.value = model.value ?? props.previousValue ?? 0
-  
+
   document.addEventListener('mousemove', onTouchMove)
   document.addEventListener('mouseup', onTouchEnd)
   document.addEventListener('touchmove', onTouchMove)
@@ -57,7 +57,7 @@ function onTouchStart(e: TouchEvent | MouseEvent) {
 
 function onTouchMove(e: TouchEvent | MouseEvent) {
   if (!isDragging.value) return
-  
+
   let currentX = 0
   const touchE = e as TouchEvent
   if (touchE.touches && touchE.touches.length > 0 && touchE.touches[0]) {
@@ -65,19 +65,19 @@ function onTouchMove(e: TouchEvent | MouseEvent) {
   } else {
     currentX = (e as MouseEvent).clientX
   }
-  
+
   const diffX = currentX - startX.value
-  
+
   // 每 10px = 1 step
   const steps = Math.round(diffX / 10)
   let newValue = startValue.value + (steps * props.step)
-  
+
   // Apply precision
   newValue = Math.round(newValue * Math.pow(10, props.precision)) / Math.pow(10, props.precision)
-  
+
   // Clamp to min/max
   newValue = Math.max(props.min, Math.min(props.max, newValue))
-  
+
   model.value = newValue
 }
 
@@ -150,29 +150,30 @@ function confirmInput() {
         {{ differenceText }}
       </span>
     </div>
-    
+    <!-- Trigger -->
+    <div
+      class="relative text-4xl font-bold text-center py-3 px-2 rounded-lg transition-all cursor-pointer select-none"
+      :class="{
+        'bg-primary-50 text-primary-700 scale-[1.02]': isDragging,
+        'bg-gray-50 text-gray-700 hover:bg-gray-100': !isDragging
+      }"
+      @mousedown="onTouchStart"
+      @touchstart="onTouchStart"
+      @dblclick="openModal"
+    >
+      <span>{{ displayValue }}</span>
+
+      <!-- Edit hint -->
+      <UIcon
+        name="i-lucide-pencil"
+        class="absolute top-1 right-1 w-4 h-4 text-gray-400 opacity-0 hover:opacity-100 transition-opacity"
+      />
+    </div>
+
     <!-- Value Display -->
     <UModal v-model:open="isOpen" :title="label">
-      <!-- Trigger -->
-      <div
-        class="relative text-4xl font-bold text-center py-3 px-2 rounded-lg transition-all cursor-pointer select-none"
-        :class="{
-          'bg-primary-50 text-primary-700 scale-[1.02]': isDragging,
-          'bg-gray-50 text-gray-700 hover:bg-gray-100': !isDragging
-        }"
-        @mousedown="onTouchStart"
-        @touchstart="onTouchStart"
-        @dblclick="openModal"
-      >
-        <span>{{ displayValue }}</span>
-        
-        <!-- Edit hint -->
-        <UIcon
-          name="i-lucide-pencil"
-          class="absolute top-1 right-1 w-4 h-4 text-gray-400 opacity-0 hover:opacity-100 transition-opacity"
-        />
-      </div>
-      
+
+
       <!-- Modal Content -->
       <template #content>
         <div class="p-4 space-y-4">
@@ -184,7 +185,7 @@ function confirmInput() {
               未有上次記錄
             </div>
           </div>
-          
+
           <UInput
             v-model="inputValue"
             type="number"
@@ -194,7 +195,7 @@ function confirmInput() {
             autofocus
             @keyup.enter="confirmInput"
           />
-          
+
           <div class="flex gap-2">
             <UButton color="primary" class="flex-1" @click="confirmInput">
               確認
@@ -206,7 +207,7 @@ function confirmInput() {
         </div>
       </template>
     </UModal>
-    
+
     <!-- Hint text -->
     <div class="flex items-center justify-center gap-1 text-xs text-gray-400 mt-1">
       <UIcon name="i-lucide-move-horizontal" class="w-3 h-3" />
